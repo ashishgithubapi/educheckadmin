@@ -76,9 +76,9 @@ const Datatable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         
-        <Link to="/users/new" className="link">
-          Add New333
-        </Link>
+        {/*<Link to="/users/new" className="link">
+          Add New
+        </Link>*/}
       </div>
       <DataGrid
         getRowId={row => row._id}

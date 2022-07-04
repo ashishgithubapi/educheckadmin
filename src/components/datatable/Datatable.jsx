@@ -7,7 +7,7 @@ import useFetch from "../../hooks/useFetch";
 import axios from 'axios';
 
 const Datatable = () => {
-  const {userData,loading,error,status} = useFetch(`${process.env.REACT_APP_API_URL}/getUser`);
+  const {userData,loading,error,status} = useFetch(`http://65.0.85.130:3001/api/getUser`);
  
   
   let OnLoadData = [];
@@ -38,7 +38,7 @@ const Datatable = () => {
   };
   console.log("userObject",userObject);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/updateUser`,userObject);
+      await axios.post(`http://65.0.85.130:3001/api/updateUser`,userObject);
       setData(OnLoadData);
     } catch (err) {}
   };

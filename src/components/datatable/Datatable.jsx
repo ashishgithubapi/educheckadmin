@@ -2,13 +2,45 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { userColumns, userRows } from "../../datatablesource";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import useFetch from "../../hooks/useFetch";
+import axios from 'axios';
 
 const Datatable = () => {
-  const [data, setData] = useState(userRows);
+  const {userData,loading,error,status} = useFetch(`${process.env.REACT_APP_API_URL}/getUser`);
+ 
+  
+  let OnLoadData = [];
+  if(status){
+    OnLoadData=userData.data.data;
+    console.log("data",OnLoadData);
+    console.log("data2",userRows);
+  }
+ 
+  const [data, setData] = useState(OnLoadData);
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  useEffect(() => {
+    setData(data);
+  }, [data]);
+
+  const handleDelete = async (params) => {
+    console.log(params);
+   
+    
+  };
+
+  const handleActiveUser = async (params) => {
+    console.log(params);
+   
+    const userObject = {
+      login_user_id: params._id,
+      is_activate: 1
+  };
+  console.log("userObject",userObject);
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/updateUser`,userObject);
+      setData(OnLoadData);
+    } catch (err) {}
   };
 
   const actionColumn = [
@@ -22,11 +54,17 @@ const Datatable = () => {
             <Link to="/users/test" style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
-            <div
+           {/* <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => {handleDelete(params.row)}}
             >
               Delete
+           </div>*/}
+            <div
+              className="deleteButton"
+              onClick={() => {handleActiveUser(params.row)}}
+            >
+              Update Status
             </div>
           </div>
         );
@@ -34,16 +72,18 @@ const Datatable = () => {
     },
   ];
   return (
+    
     <div className="datatable">
       <div className="datatableTitle">
-        Add New User
+        
         <Link to="/users/new" className="link">
-          Add New
+          Add New333
         </Link>
       </div>
       <DataGrid
+        getRowId={row => row._id}
         className="datagrid"
-        rows={data}
+        rows={OnLoadData}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
